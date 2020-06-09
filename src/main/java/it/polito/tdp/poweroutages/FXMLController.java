@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.poweroutages.model.Model;
+import it.polito.tdp.poweroutages.model.Nerc;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,7 +29,7 @@ public class FXMLController {
     private Button btnCreaGrafo;
 
     @FXML
-    private ComboBox<?> cmbBoxNerc;
+    private ComboBox<Nerc> cmbBoxNerc;
 
     @FXML
     private Button btnVisualizzaVicini;
@@ -42,16 +43,41 @@ public class FXMLController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
 
+    	String x = model.creaGrafo();
+    	
+    	this.cmbBoxNerc.getItems().addAll(model.getNerc());
+    	
+    	this.btnVisualizzaVicini.setDisable(false);
+		this.btnSimula.setDisable(false);
+    	this.txtResult.appendText(x);
     }
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	Integer K;
+    	try {
+    		K = Integer.parseInt(this.txtK.getText());
+    	}catch(NumberFormatException e) {
+    		this.txtResult.appendText("Inserire un numero");
+    		return;
+    	}
+    	String output = model.simula(K);
+    	this.txtResult.appendText(output);
     }
 
     @FXML
     void doVisualizzaVicini(ActionEvent event) {
 
+    	Nerc n = this.cmbBoxNerc.getValue();
+    	if(n==null) {
+    		this.txtResult.appendText("\nInserire un nerc!!!");
+    		return;
+    	}
+    	String output = model.getVicini(n);
+    	
+    	this.txtResult.appendText(output);
+    	
     }
 
     @FXML
@@ -67,5 +93,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		this.btnVisualizzaVicini.setDisable(true);
+		this.btnSimula.setDisable(true);
 	}
 }

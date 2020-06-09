@@ -1,12 +1,16 @@
 package it.polito.tdp.poweroutages.model;
 
-public class Nerc {
+public class Nerc implements Comparable<Nerc>{
 	private int id;
 	private String value;
+	private boolean libero;
+	private int bonus;
 
 	public Nerc(int id, String value) {
 		this.id = id;
 		this.value = value;
+		this.libero = true;
+		this.bonus = 0;
 	}
 
 	public int getId() {
@@ -23,6 +27,18 @@ public class Nerc {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	public boolean isLibero() {
+		return libero;
+	}
+
+	public void setLibero(boolean libero) {
+		this.libero = libero;
+	}
+	
+	public void increaseBonus(int b) {
+		this.bonus += b;
 	}
 
 	@Override
@@ -52,5 +68,19 @@ public class Nerc {
 		StringBuilder builder = new StringBuilder();
 		builder.append(value);
 		return builder.toString();
+	}
+
+	@Override
+	public int compareTo(Nerc other) {
+		return -(this.bonus-other.bonus);
+	}
+
+	public int getBonus() {
+		// TODO Auto-generated method stub
+		return this.bonus;
+	}
+
+	public void resetBonus() {
+		this.bonus = 0;
 	}
 }
